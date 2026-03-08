@@ -1,0 +1,34 @@
+edition: 1.0.0
+name: resume-analyzer
+access: default
+
+services:
+  resume-api:
+    component: fc
+    props:
+      region: cn-hangzhou
+      service:
+        name: resume-service
+        description: 智能简历分析服务
+        internetAccess: true
+      function:
+        name: resume-function
+        description: 简历解析和匹配功能
+        runtime: python3.9
+        codeUri: ./
+        handler: main.handler
+        memorySize: 512
+        timeout: 60
+        environmentVariables:
+          DEEPSEEK_API_KEY: ${env(DEEPSEEK_API_KEY)}
+          DEEPSEEK_BASE_URL: ${env(DEEPSEEK_BASE_URL)}
+      triggers:
+        - name: httpTrigger
+          type: http
+          config:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
